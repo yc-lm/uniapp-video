@@ -26,7 +26,7 @@
 <script>
 import { CustomPlayStatusOBJ } from './render-service/utils';
 export default {
-  name: 'H5AppVideo',
+  name: 'VideoPlayer',
   props: {
     src: {
       type: String,
