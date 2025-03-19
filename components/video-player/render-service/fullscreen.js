@@ -1,56 +1,54 @@
 /**
  * @name: fullscreen.js
  * @author: yangcongcong
- * @date: 2025/3/9
- * @description: 处理全屏相关的兼容写法
+ * @date: 2025/3/18
+ * @description: 基于全屏api封装兼容不支持 fullscreen的情况：使用css模拟全屏
  */
+import fscreen from './fscreenApi';
+const FixedIndex = 9999; // 全屏时的层级
 export default {
   methods: {
-    // 判断是否全屏
-    isFullScreen(currentEle) {
-      // for older versions of Safari and IOS, `isFullscreenEnabled` will return false
-      const presentationMode = currentEle?.webkitPresentationMode;
-      if (this.isApple() && presentationMode) {
-        return presentationMode === 'fullscreen';
-      }
-
-      return !!(
-        document.fullscreenElement ||
-        document.webkitFullscreenElement ||
-        document.mozFullScreenElement ||
-        document.msFullscreenElement
-      );
+    // 获取整个对象
+    getCurrentInstance() {
+      return fscreen;
     },
 
-    // 进入全屏
-    enterFullScreen(element) {
-      if (element.requestFullscreen) {
-        element.requestFullscreen();
-      } else if (element.webkitRequestFullscreen) {
-        element.webkitRequestFullscreen();
-      } else if (element.mozRequestFullScreen) {
-        element.mozRequestFullScreen();
-      } else if (element.msRequestFullscreen) {
-        element.msRequestFullscreen();
-      } else if (element.webkitEnterFullscreen) {
-        // for older versions of Safari and IOS, `isFullscreenEnabled` will return false
-        element.webkitEnterFullscreen();
+    // 是否支持全屏api
+    isSupportFullscreen() {
+      return fscreen.fullscreenEnabled;
+    },
+
+    // 是否在全屏状态
+    isFullscreen(containerEl) {
+      if (!containerEl) return;
+      const isSupport = this.isSupportFullscreen();
+      if (isSupport) {
+        return !!fscreen.fullscreenElement;
+      } else {
+        const styles = containerEl.style;
+        return styles && styles['z-index'] && styles['z-index'] === `${FixedIndex}`; // 判断是否处于全屏
       }
     },
 
-    // 退出全屏
-    exitFullScreen(element) {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-      } else if (document.mozCancelFullScreen) {
-        document.mozCancelFullScreen();
-      } else if (document.msExitFullscreen) {
-        document.msExitFullscreen();
-      } else if (element.webkitExitFullscreen) {
-        // for older versions of Safari and IOS, `isFullscreenEnabled` will return false
-        element.webkitExitFullscreen();
+    // 请求全屏
+    requestFullscreen(containerEl) {
+      if (!containerEl) return;
+      const isSupport = this.isSupportFullscreen();
+      if (isSupport) {
+        fscreen.requestFullscreen(containerEl);
+      } else {
+        Object.assign(containerEl.style, this.FullscreenStyles.full);
+      }
+    },
+
+    // 取消全屏
+    exitFullscreen(containerEl, initStyles = {}) {
+      if (!containerEl) return;
+      const isSupport = this.isSupportFullscreen();
+      if (isSupport) {
+        fscreen.exitFullscreen();
+      } else {
+        Object.assign(containerEl.style, { ...this.FullscreenStyles.init, ...initStyles });
       }
     },
   },

@@ -12,8 +12,8 @@ export const ButtonWrapperSize = 32;
 export const ButtonSize = 24;
 // 使用到的图标
 export const LocalImgPath = {
-  backBtn: './static/images/video/icon-arrow-left.png',
-  editBtn: './static/images/video/edit.png',
+  backBtn: './static/images/icon-arrow-left.png',
+  editBtn: './static/images/report/edit.png',
   hiddenBtn: './static/images/video/original-hidden.png',
   playBtn: './static/images/video/original-play.png',
   pauseBtn: './static/images/video/original-pause.png',
@@ -212,7 +212,7 @@ export const LoadingStyles = {
     zIndex: '1',
     width: '100%',
     height: '100%',
-    backgroundColor: 'black'
+    backgroundColor: 'black',
   },
   // 动画
   loadingCircle: {
@@ -229,6 +229,25 @@ export const LoadingStyles = {
     borderRightColor: 'rgba(255, 255, 255, 0.2)',
     borderBottomColor: 'rgba(255, 255, 255, 0.2)',
     borderRadius: '100%',
-    animation: 'circle infinite 0.75s linear'
+    animation: 'circle infinite 0.75s linear',
+  },
+};
+
+// 全屏的样式
+export const FullscreenStyles = {
+  full: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    zIndex: '9999',
+  },
+  init: {
+    position: 'relative',
+    top: 'unset',
+    left: 'unset',
+    width: 'auto',
+    zIndex: 'unset',
   },
 };

@@ -7,9 +7,15 @@
 const PLAYER_ID = 'DOM_VIDEO_PLAYER';
 import coverEl from './coverEl';
 import progressEl from './progressEl';
-import fullscreen from './fullscreen';
 import { CustomPlayStatusOBJ, formatVideoTime } from './utils';
-import { CoverStyles, LoadingStyles, LocalImgPath, ProgressStyles } from './styles';
+import {
+  CoverStyles,
+  LoadingStyles,
+  LocalImgPath,
+  ProgressStyles,
+  FullscreenStyles,
+} from './styles';
+import fullscreen from './fullscreen';
 export default {
   mixins: [coverEl, progressEl, fullscreen],
   data() {
@@ -36,6 +42,7 @@ export default {
       ProgressStyles,
       CoverStyles,
       LoadingStyles,
+      FullscreenStyles,
 
       // 路径
       LocalImgPath,
@@ -48,6 +55,9 @@ export default {
     wrapperId() {
       return `video-wrapper-${this.num}`;
     },
+  },
+  mounted() {
+    this.createBackBtn();
   },
   methods: {
     isApple() {
@@ -356,6 +366,7 @@ export default {
       }
     },
     triggerFunc(func) {
+      console.log('triggerFunc', func);
       const { name, params } = func || {};
       if (name) {
         this[name](params);
@@ -414,6 +425,12 @@ export default {
       this.num = val;
     },
     formatVideoTime,
+    async createBackBtn() {
+      await this.$nextTick();
+      const parentEl = document.getElementById(this.wrapperId);
+      // 创建返回
+      this.createBack(parentEl);
+    },
     log(subKey, params = {}) {
       console.log(`videoEl: ${subKey}`, JSON.stringify(params));
     },

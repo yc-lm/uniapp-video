@@ -32,14 +32,11 @@ export default {
   methods: {
     // 创建自定义视频上的悬浮层：包含自定义控制栏，自定义头部导航，
     createCover() {
+      const parentEl = document.getElementById(this.wrapperId);
       const coverEl = document.createElement('div');
       this.coverEl = coverEl;
       coverEl.className = 'cover-wrapper';
       Object.assign(coverEl.style, this.CoverStyles.coverWrapper);
-
-      const parentEl = document.getElementById(this.wrapperId);
-      // 创建返回
-      this.createBack(parentEl);
       // 创建进度条
       this.createControls();
 
@@ -213,27 +210,36 @@ export default {
       const fullScreenHandler = (e) => {
         e.stopPropagation(); // 阻止冒泡
         const playerWrapperEl = document.getElementById(this.wrapperId);
-        let isFullScreen = this.isFullScreen(playerWrapperEl);
-        this.log('coverEl:fullScreenHandler', { isFullScreen });
 
+        if (!playerWrapperEl) {
+          console.error('playerWrapperEl not exist');
+          return false;
+        }
+
+        const isSupport = this.isSupportFullscreen();
+        let isFullScreen = this.isFullscreen(playerWrapperEl);
         if (!isFullScreen) {
-          this.enterFullScreen(playerWrapperEl);
+          this.requestFullscreen(playerWrapperEl);
           // 隐藏编辑和隐藏视频按钮
           this.hideHiddenBtn();
           this.hideEditBtn();
           this.isFullScreenFlag = true;
         } else {
-          this.exitFullScreen(playerWrapperEl);
+          this.exitFullscreen(playerWrapperEl);
           // 显示编辑和隐藏视频按钮
           this.showHiddenBtn();
           this.showEditBtn();
           this.isFullScreenFlag = false;
         }
+
+        this.log('coverEl:fullScreenHandler', {
+          isSupport,
+          fullscreenChange: `before${isFullScreen}, after${this.isFullScreenFlag}`,
+        });
         this.$ownerInstance.callMethod('eventEmit', {
           event: 'fullscreenchange',
           data: isFullScreen,
         });
-
         // 刷新定时器时间
         this.resetCoverTimer(false);
       };
@@ -260,7 +266,8 @@ export default {
         // 如果是全屏状态
         if (this.isFullScreenFlag) {
           const playerWrapperEl = document.getElementById(this.wrapperId);
-          this.exitFullScreen(playerWrapperEl);
+          const isSupport = fscreen.fullscreenEnabled; // 是否支持
+          this.customExitFullscreen(playerWrapperEl, isSupport);
           // 显示编辑和隐藏视频按钮
           this.showHiddenBtn();
           this.showEditBtn();
