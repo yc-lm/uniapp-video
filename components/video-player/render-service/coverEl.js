@@ -263,11 +263,11 @@ export default {
       backEl.appendChild(backBtnEl);
 
       const backHandler = () => {
+        console.log('backHandler', this.isFullScreenFlag);
         // 如果是全屏状态
         if (this.isFullScreenFlag) {
           const playerWrapperEl = document.getElementById(this.wrapperId);
-          const isSupport = fscreen.fullscreenEnabled; // 是否支持
-          this.customExitFullscreen(playerWrapperEl, isSupport);
+          this.exitFullscreen(playerWrapperEl);
           // 显示编辑和隐藏视频按钮
           this.showHiddenBtn();
           this.showEditBtn();

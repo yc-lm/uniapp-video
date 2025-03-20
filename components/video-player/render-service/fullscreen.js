@@ -5,7 +5,7 @@
  * @description: 基于全屏api封装兼容不支持 fullscreen的情况：使用css模拟全屏
  */
 import fscreen from './fscreenApi';
-const FixedIndex = 9999; // 全屏时的层级
+const FixedIndex = 9998; // 全屏时的层级
 export default {
   methods: {
     // 获取整个对象
@@ -37,7 +37,7 @@ export default {
       if (isSupport) {
         fscreen.requestFullscreen(containerEl);
       } else {
-        Object.assign(containerEl.style, this.FullscreenStyles.full);
+        Object.assign(containerEl.style, { ...this.FullscreenStyles.full, zIndex: FixedIndex });
       }
     },
 
@@ -48,7 +48,10 @@ export default {
       if (isSupport) {
         fscreen.exitFullscreen();
       } else {
-        Object.assign(containerEl.style, { ...this.FullscreenStyles.init, ...initStyles });
+        Object.assign(containerEl.style, {
+          ...this.FullscreenStyles.init,
+          ...initStyles,
+        });
       }
     },
   },

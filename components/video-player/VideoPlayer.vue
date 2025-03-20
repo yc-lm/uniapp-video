@@ -1,7 +1,7 @@
 <!--
  * @name: H5AppVideo.vue
  * @author: yangcongcong
- * @date: 2025/3/12
+ * @date: 2025/3/9
  * @description: 描述
 -->
 
@@ -124,7 +124,7 @@ export default {
         console.log('eventEmit', event, data);
         // #ifdef APP-PLUS
         if (!data) {
-          plus.screen.lockOrientation('landscape');
+          plus.screen.lockOrientation('landscape-primary');
         } else {
           plus.screen.lockOrientation('portrait-primary');
         }
@@ -179,12 +179,13 @@ export default {
   },
 };
 </script>
-<script module="domVideoPlayer" lang="renderjs" src="./render-service/videoEl.js"></script>
+<script module="domVideoPlayer" lang="renderjs" src="./render/videoEl.js"></script>
 <style scoped lang="scss">
 .player-wrapper {
   overflow: hidden;
   height: 100%;
   padding: 0;
   position: relative;
+  background: #000;
 }
 </style>
