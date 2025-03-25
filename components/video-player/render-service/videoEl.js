@@ -178,7 +178,13 @@ export default {
           value: CustomPlayStatusOBJ.START,
         });
 
-        this.hiddenLoading();
+        // 安卓环境延迟关闭，立刻关闭时还是看到了黑色图标
+        setTimeout(
+          () => {
+            this.hiddenLoading();
+          },
+          this.isApple() ? 0 : 200,
+        );
 
         // 更新播放状态
         this.refreshPlayEl();
@@ -233,7 +239,11 @@ export default {
 
       // loadedmetadata 事件监听
       const loadedMetadataHandler = (e) => {
-        this.hiddenLoading();
+        // 安卓有黑色播放图标，这里先不关闭loading
+        if (this.isApple()) {
+          this.hiddenLoading();
+        }
+
         this.$ownerInstance.callMethod('eventEmit', { event: 'loadedmetadata', data: e });
         // 获取视频的长度
         const duration = this.videoEl.duration;
